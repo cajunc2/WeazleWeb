@@ -3,12 +3,13 @@ function gitit(url) {
 
 function sendImageWrite() {
 	const formData = new FormData(document.forms[0]);
-	
+
 	const fields = Array.from(document.forms[0].elements);
 	fields.forEach((field) => {
 		field.setAttribute('disabled', 'disabled');
 	});
 	document.getElementById('processOutput').textContent = '';
+	
 	fetch('/gw/file', {
 		method: 'POST',
 		body: formData
