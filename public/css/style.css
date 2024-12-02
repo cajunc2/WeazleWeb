@@ -1,6 +1,8 @@
 body {
 	padding: 50px;
 	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+	background: #222;
+	color: #eee;
 }
 
 a {
@@ -14,3 +16,38 @@ a {
 	height: 300px;
 	overflow-y: auto;
 }
+
+.select-button input {
+	display: none;
+}
+
+.select-button input + div {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 4px;
+	background: #444;
+	cursor:pointer;
+	user-select: none;
+	-webkit-user-select: none;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.select-button input:checked + div {
+	background: #452fa9;
+}
+
+.select-button input + div:active {
+	background: #36365b;
+}
+
+.select-button.drive-select input + div {
+	width: 128px;
+	height: 128px;
+}
+
+.select-button.format-select input + div {
+	width: 128px;
+	height: 64px;
+}
+

@@ -25,11 +25,20 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.post('/file', upload.single('diskimage'), function (req, res, next) {
-		const child = spawn('gw', ['write', uploadDir + req.file.filename, '--format', req.body.format]);
-		// const child = spawn('hexdump', ['-C',  uploadDir + req.file.filename]);
-		child.stdout.setEncoding('utf8');
-		child.stderr.pipe(res);
-		child.stdout.pipe(res);
+	let params = [
+		'write',
+		uploadDir + req.file.filename,
+		'--diskdefs',
+		__dirname + '/../diskdefs.cfg',
+		'--format',
+		req.body.format,
+		'--drive',
+		req.body.driveLetter
+	];
+	const child = spawn('gw', params);
+	child.stdout.setEncoding('utf8');
+	child.stderr.pipe(res);
+	child.stdout.pipe(res);
 });
 
 module.exports = router;
