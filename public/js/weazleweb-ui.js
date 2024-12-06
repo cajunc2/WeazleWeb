@@ -69,6 +69,7 @@ let refreshUI = function () {
 	ui.modeSelectButton.innerHTML = params.getMode().display;
 	ui.commandModeOutput.innerText = params.getMode().value;
 	if (params.getMode().value === 'read') {
+		document.documentElement.classList.remove('warning');
 		ui.readFilenameInput.style.display = '';
 		ui.fileSelectButton.style.display = 'none';
 		if (params.filename.trim() === '') {
@@ -77,6 +78,7 @@ let refreshUI = function () {
 			ui.commandFileOutput.innerText = params.filename;
 		}
 	} else {
+		document.documentElement.classList.add('warning');
 		ui.readFilenameInput.style.display = 'none';
 		ui.fileSelectButton.style.display = '';
 		if (ui.writeFileInput.files[0] == null) {
@@ -132,9 +134,24 @@ function streamOutput(newData) {
 	ui.processOutput.scrollTop = ui.processOutput.scrollHeight;
 }
 
-ui.executeButton.addEventListener('click', () => {
-	validateInputs();
-	params.getMode().execute(params, streamOutput, null);
+let executeTimer = null;
+ui.executeButton.addEventListener('mousedown', () => {
+	executeTimer = setTimeout(() => {
+		ui.executeButton.disabled = true;
+		ui.processOutput.innerHTML = '';
+		validateInputs();
+		params.getMode().execute(params, streamOutput, () => {
+			ui.executeButton.disabled = false;
+		});
+	}, params.getMode().value === 'read' ? 500 : 1000);
+});
+
+ui.executeButton.addEventListener('mouseout', () => {
+	clearTimeout(executeTimer);
+});
+
+ui.executeButton.addEventListener('mouseup', () => {
+	clearTimeout(executeTimer);
 });
 
 refreshUI();

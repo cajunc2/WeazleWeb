@@ -2,7 +2,7 @@ body {
 	padding: 50px;
 	font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 	background: #222;
-	color: #eee;
+	color: #EEE;
 }
 
 a {
@@ -34,6 +34,14 @@ button {
 
 button:active {
 	background: #36365b;
+}
+
+html.warning button {
+	background: #7f2d18;
+}
+
+html.warning button:active {
+	background: #5e2314;
 }
 
 button {
@@ -86,4 +94,35 @@ h3 {
 #commandFileOutput:empty::after {
 	content: '<no file>';
 	color: red;
+}
+
+#executeButton {
+	position: relative;
+}
+
+#executeButton::after {
+	content: '';
+	position: absolute;
+	border-bottom: 2px solid white;
+	width: 100%;
+	bottom: 0;
+	left: 0;
+	visibility: hidden;
+	transform: scaleX(0);
+	transform-origin: 0 0;
+}
+
+#executeButton:hover:active::after {
+	visibility: visible;
+	transform: scaleX(1);
+	transition: transform 500ms linear;
+}
+
+html.warning #executeButton:hover:active::after {
+	transition: transform 1000ms linear;
+}
+
+#executeButton:disabled {
+	background-color: #444;
+	color: #999;
 }

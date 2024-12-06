@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
 
 	res.sendFile(filename, options, function (err) {
 		if (err) {
-			next(err);
+			res.sendStatus(204);
 		}
 	});
 };
