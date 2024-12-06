@@ -13,7 +13,7 @@ module.exports = (req, res) => {
 		dir + req.query.requestId + '-' + req.query.filename
 	];
 
-	const child = spawn('gw', params, {shell: true});
+	const child = spawn('~/.local/bin/gw', params, {shell: true});
 	child.stdout.setEncoding('utf8');
 	child.stderr.setEncoding('utf8');
 	child.stdout.pipe(res);
