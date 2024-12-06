@@ -1,6 +1,6 @@
 let requestId = null;
 
-function submitReadRequest() {
+function submitReadRequest(params, onOutput, onComplete) {
 	requestId = generateUUID();
 
 	let queryParams = new URLSearchParams({
@@ -10,20 +10,22 @@ function submitReadRequest() {
 		filename: params.getFilename()
 	});
 
+	let downloadReadImage = function(response) {
+		console.dir(response);
+		fetch('/api/downloadImage?requestId=' + requestId);
+		if(onComplete) { onComplete(); }
+	}
+
 	fetch('/api/readImage?' + queryParams.toString(), {
 		method: 'POST'
-	}).then(streamProcessOutput(downloadReadImage));
-}
-
-function downloadReadImage() {
-	fetch('/api/downloadImage?requestId=' + requestId);
+	}).then(streamProcessOutput(onOutput, downloadReadImage));
 }
 
 function submitWriteRequest() {
 
 }
 
-function streamProcessOutput(whenDone) {
+function streamProcessOutput(onOutput, onComplete) {
 	return (response) => {
 		let reader = response.body.getReader();
 		let decoder = new TextDecoder();
@@ -31,11 +33,10 @@ function streamProcessOutput(whenDone) {
 		function readData() {
 			return reader.read().then(function ({ value, done }) {
 				let newData = decoder.decode(value, { stream: !done });
-				ui.processOutput.textContent += newData;
-				ui.processOutput.scrollTop = ui.processOutput.scrollHeight;
+				onOutput(newData);
 				if (done) {
-					if (whenDone) {
-						whenDone();
+					if (onComplete) {
+						onComplete(response);
 					}
 					return;
 				}

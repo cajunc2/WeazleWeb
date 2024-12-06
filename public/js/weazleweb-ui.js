@@ -26,27 +26,27 @@ const ui = {
 	formatSelectButton: document.getElementById('formatSelectButton'),
 	commandFormatOutput: document.getElementById('commandFormatOutput'),
 	executeButton: document.getElementById('executeButton'),
-	processOutput : document.getElementById('processOutput')
+	processOutput: document.getElementById('processOutput')
 };
 
 const defaultFilename = 'disk.img';
 
 let params = {
 	mode: 0,
-	getMode: function() {
+	getMode: function () {
 		return modes[this.mode];
 	},
 	drive: 0,
-	getDrive: function() {
+	getDrive: function () {
 		return drives[this.drive];
 	},
 	format: 0,
-	getFormat: function() {
+	getFormat: function () {
 		return formats[this.format];
 	},
 	filename: '',
-	getFilename: function() {
-		if(this.filename && this.filename.length > 0) {
+	getFilename: function () {
+		if (this.filename && this.filename.length > 0) {
 			return this.filename;
 		}
 		return defaultFilename;
@@ -94,7 +94,7 @@ let refreshUI = function () {
 	ui.commandFormatOutput.innerText = params.getFormat().value;
 };
 
-let validateInputs = function() {
+let validateInputs = function () {
 
 }
 
@@ -127,9 +127,14 @@ ui.writeFileInput.addEventListener('change', () => {
 	refreshUI();
 });
 
+function streamOutput(newData) {
+	ui.processOutput.textContent += newData;
+	ui.processOutput.scrollTop = ui.processOutput.scrollHeight;
+}
+
 ui.executeButton.addEventListener('click', () => {
 	validateInputs();
-	params.getMode().execute();
+	params.getMode().execute(params, streamOutput, null);
 });
 
 refreshUI();
