@@ -1,18 +1,22 @@
-var express = require('express');
-var router = express.Router();
 const { spawn } = require('child_process');
+const uploadDir = global.appDir + '/disks/write/';
 
-const uploadDir = __dirname + '/../uploads/';
+module.exports = (req, res) => {
+	console.dir(req.file);
+	let params = [
+		'write',
+		// '--diskdefs',
+		// global.appDir + '/diskdefs.cfg',
+		'--format',
+		req.query.format,
+		'--drive',
+		req.query.drive,
+		uploadDir + req.file.filename
+	];
 
-var timestamp = function () {
-	let pad2 = function (n) { return n < 10 ? '0' + n : n }
-
-	var date = new Date();
-	return date.getFullYear().toString() + pad2(date.getMonth() + 1) + pad2(date.getDate()) + pad2(date.getHours()) + pad2(date.getMinutes()) + pad2(date.getSeconds());
-}
-
-router.post('/', function (req, res, next) {
-	console.dir(req);
-});
-
-module.exports = router;
+	const child = spawn('~/.local/bin/gw', params, { shell: true });
+	child.stdout.setEncoding('utf8');
+	child.stderr.setEncoding('utf8');
+	child.stdout.pipe(res);
+	child.stderr.pipe(res);
+};

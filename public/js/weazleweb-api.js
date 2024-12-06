@@ -36,8 +36,21 @@ function submitReadRequest(params, onOutput, onComplete) {
 	}).then(streamProcessOutput(onOutput, downloadReadImage));
 }
 
-function submitWriteRequest() {
+function submitWriteRequest(params, onOutput, onComplete) {
+	requestId = generateUUID();
 
+	let writeImageParams = new URLSearchParams({
+		requestId: requestId,
+		drive: params.getDrive().value,
+		format: params.getFormat().value
+	});
+
+	const formData = new FormData();
+	formData.append('diskimage', ui.writeFileInput.files[0]);
+	fetch('/api/writeImage?' + writeImageParams.toString(), {
+		method: 'POST',
+		body: formData
+	}).then(streamProcessOutput(onOutput, onComplete));
 }
 
 function streamProcessOutput(onOutput, onComplete) {
