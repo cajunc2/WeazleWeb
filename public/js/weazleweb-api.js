@@ -12,7 +12,7 @@ function submitReadRequest() {
 
 	fetch('/api/readImage?' + queryParams.toString(), {
 		method: 'POST'
-	}).then(streamProcessOutput(response, downloadReadImage));
+	}).then(streamProcessOutput(downloadReadImage));
 }
 
 function downloadReadImage() {
@@ -23,8 +23,8 @@ function submitWriteRequest() {
 
 }
 
-function streamProcessOutput(response, whenDone) {
-	return () => {
+function streamProcessOutput(whenDone) {
+	return (response) => {
 		let reader = response.body.getReader();
 		let decoder = new TextDecoder();
 		return readData();
