@@ -12,7 +12,7 @@ function submitReadRequest() {
 
 	fetch('/api/readImage?' + queryParams.toString(), {
 		method: 'POST'
-	}).then((response) => streamProcessOutput(response, downloadReadImage));
+	}).then(streamProcessOutput(response, downloadReadImage));
 }
 
 function downloadReadImage() {
@@ -24,23 +24,25 @@ function submitWriteRequest() {
 }
 
 function streamProcessOutput(response, whenDone) {
-	let reader = response.body.getReader();
-	let decoder = new TextDecoder();
-	return readData();
-	function readData() {
-		return reader.read().then(function ({ value, done }) {
-			let newData = decoder.decode(value, { stream: !done });
-			ui.processOutput.textContent += newData;
-			ui.processOutput.scrollTop = ui.processOutput.scrollHeight;
-			if (done) {
-				if (whenDone) {
-					whenDone();
+	return () => {
+		let reader = response.body.getReader();
+		let decoder = new TextDecoder();
+		return readData();
+		function readData() {
+			return reader.read().then(function ({ value, done }) {
+				let newData = decoder.decode(value, { stream: !done });
+				ui.processOutput.textContent += newData;
+				ui.processOutput.scrollTop = ui.processOutput.scrollHeight;
+				if (done) {
+					if (whenDone) {
+						whenDone();
+					}
+					return;
 				}
-				return;
-			}
-			return readData();
-		});
-	}
+				return readData();
+			});
+		}
+	};
 }
 
 
