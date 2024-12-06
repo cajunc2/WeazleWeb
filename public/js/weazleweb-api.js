@@ -9,7 +9,14 @@ function submitReadRequest(params, onOutput, onComplete) {
 	});
 
 	let downloadReadImage = function(response) {
-		fetch('/api/downloadImage?' + downloadParams.toString() );
+		// fetch('/api/downloadImage?' + downloadParams.toString() );
+		var a = document.createElement('a');
+		a.style.display = 'none';
+            a.href = '/api/downloadImage?' + downloadParams.toString();
+            document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+            a.click();    
+            a.remove();  //afterwards we remove the element again         
+
 		if(onComplete) { onComplete(); }
 	}
 
