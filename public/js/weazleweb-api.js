@@ -3,20 +3,23 @@ let requestId = null;
 function submitReadRequest(params, onOutput, onComplete) {
 	requestId = generateUUID();
 
-	let queryParams = new URLSearchParams({
+	let downloadParams = new URLSearchParams({
+		requestId: requestId,
+		filename: params.getFilename()
+	});
+
+	let downloadReadImage = function(response) {
+		fetch('/api/downloadImage?' + downloadParams.toString() );
+		if(onComplete) { onComplete(); }
+	}
+
+	let readImageParams = new URLSearchParams({
 		requestId: requestId,
 		drive: params.getDrive().value,
 		format: params.getFormat().value,
 		filename: params.getFilename()
 	});
-
-	let downloadReadImage = function(response) {
-		console.dir(response);
-		fetch('/api/downloadImage?requestId=' + requestId);
-		if(onComplete) { onComplete(); }
-	}
-
-	fetch('/api/readImage?' + queryParams.toString(), {
+	fetch('/api/readImage?' + readImageParams.toString(), {
 		method: 'POST'
 	}).then(streamProcessOutput(onOutput, downloadReadImage));
 }

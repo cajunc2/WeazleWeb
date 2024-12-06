@@ -1,5 +1,5 @@
 var readImage = require('./readImage');
-// var downloadImage = require('./downloadImage');
+var downloadImage = require('./downloadImage');
 
 module.exports = (express) => {
 	// Create express Router
@@ -7,7 +7,7 @@ module.exports = (express) => {
 
 	// add routes
 	router.post('/readImage', readImage);
-	// router.get('/downloadImage', downloadImage);
+	router.get('/downloadImage', downloadImage);
 
 	return router;
 }
