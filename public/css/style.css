@@ -17,37 +17,73 @@ a {
 	overflow-y: auto;
 }
 
-.select-button input {
-	display: none;
-}
-
-.select-button input + div {
+button {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border-radius: 4px;
-	background: #444;
+	background: #452fa9;
 	cursor:pointer;
 	user-select: none;
 	-webkit-user-select: none;
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+	font: 13pt "Lucida Grande", Helvetica, Arial, sans-serif;
+	border: none;
+	color: #ddd;
 }
 
-.select-button input:checked + div {
-	background: #452fa9;
-}
-
-.select-button input + div:active {
+button:active {
 	background: #36365b;
 }
 
-.select-button.drive-select input + div {
-	width: 128px;
-	height: 128px;
-}
-
-.select-button.format-select input + div {
-	width: 128px;
+button {
+	width: 160px;
 	height: 64px;
 }
 
+input[type=text] {
+	background-color: #333;
+	font: 13pt "Lucida Grande", Helvetica, Arial, sans-serif;
+	color: #eee;
+	padding: 4px 12px;
+	border: 1px solid #999;
+	border-radius: 4px;
+	box-shadow: inset 0px 4px 16px rgba(0, 0, 0, 0.5);
+	height: 32px;
+	outline: none;
+}
+
+input[type=text]:focus {
+	border-color: #fff;
+}
+
+#readFilenameInput {
+	width: 256px;
+}
+
+#fileSelectButton {
+	width: 256px;
+	height: 32px;
+}
+
+h3 {
+	width: 640px;
+	margin: 64px auto 8px;
+	font-weight: 500;
+}
+
+#processOutput {
+	height: 192px;
+	overflow-y: scroll;
+	border: 1px solid #666;
+	border-radius: 4px;
+	font-family: monospace;
+	width: 640px;
+	box-shadow: inset 0px 4px 16px rgba(0, 0, 0, 0.3);
+	margin: 8px auto;
+}
+
+#commandFileOutput:empty::after {
+	content: '<no file>';
+	color: red;
+}

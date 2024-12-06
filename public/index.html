@@ -3,42 +3,38 @@
 <head>
 	<title>WeazleWeb</title>
 	<link rel="stylesheet" href="/css/style.css">
-	<script src="js/chunked.js"></script>
+	<script src="js/weazleweb-api.js"></script>
+	<script src="js/weazleweb-ui.js" defer></script>
 </head>
 
 <body>
 	<h1 style="text-align: center;">WeazleWeb</h1>
-	<form style="width: 768px; margin: 0 auto; display: flex; flex-direction: column; align-items: center;">
-		<div style="display: flex; justify-content: center; gap: 14px;">
-			<label class="select-button drive-select"><input type="radio" name="driveLetter" value="A" checked />
-				<div><div style="text-align: center;">Drive<br /><span style="font-size:34pt">A</span></div></div>
-			</label>
-			<label class="select-button drive-select"><input type="radio" name="driveLetter" value="B"  />
-				<div><div style="text-align: center;">Drive<br /><span style="font-size:34pt">B</span></div></div>
-			</label>
-		</div>
-		<br />
-		<div style="display: flex; justify-content: center; gap: 14px;">
-			<label class="select-button format-select"><input type="radio" name="format" value="ibm.360" checked />
-				<div><div style="text-align: center;">IBM 360K<br />DS/DD</div></div>
-			</label>
-			<label class="select-button format-select"><input type="radio" name="format" value="kaypro.ssdd" />
-				<div><div style="text-align: center;">Kaypro II<br />SS/DD</div></div>
-			</label>
-			<label class="select-button format-select"><input type="radio" name="format" value="LDOS_SSDD.40T" />
-				<div><div style="text-align: center;">TRS-80<br />SS/DD</div></div>
-			</label>
-		</div>
-		<br />
-		<input type="file" name="diskimage" id="diskImageInput" />
-		<br />
-		<div>
-			<button onclick="sendImageRead(); return false;">Read Disk</button>
-			<button onclick="sendImageWrite(); return false;">Write Disk</button>
-		</div>
-	</form>
-	<output id="processOutput" style="font-family: monospace; white-space: pre;"></output>
 
+	<input style="display: none;"" type="file" id="writeFileInput" />
+	<div style="margin: 16px auto; display: flex; align-items: center; justify-content: center; gap: 12px">
+		<button id="modeSelectButton">Read</button>
+		<button id="driveSelectButton">Drive A</button>
+		<button id="formatSelectButton">IBM 360K<br />DS/DD</button>
+	</div>
+	<div style="margin: 32px auto; display: flex; align-items: center; justify-content: center; gap: 12px">
+		<input type="text" id="readFilenameInput" placeholder="disk.img" />
+		<button style="display: none;" id="fileSelectButton">Select Disk Image</button>
+	</div>
+	<div style="width: 640px; margin: 32px auto; font-family: monospace; text-align: center;">
+		command>
+		gw
+		<output id="commandModeOutput">read</output>
+		--drive
+		<output id="commandDriveOutput">A</output>
+		--format
+		<output id="commandFormatOutput">ibm.360</output>
+		<output id="commandFileOutput">disk.img</output>
+	</div>
+	<div style="margin: 32px auto; display: flex; align-items: center; justify-content: center; gap: 12px">
+		<button id="executeButton">GO!</button>
+	</div>
+	<h3>Greaseweazle Output:</h3>
+	<output id="processOutput" style="font-family: monospace; white-space: pre;"></output>
 </body>
 
 </html>
