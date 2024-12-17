@@ -55,6 +55,9 @@ let params = {
 		this.mode++;
 		if (this.mode >= modes.length) { this.mode = 0; }
 	},
+	writeMode: function() {
+		this.mode = 1;
+	},
 	nextDrive: function () {
 		this.drive++;
 		if (this.drive >= drives.length) { this.drive = 0; }
@@ -152,6 +155,17 @@ ui.executeButton.addEventListener('mouseout', () => {
 
 ui.executeButton.addEventListener('mouseup', () => {
 	clearTimeout(executeTimer);
+});
+
+document.documentElement.addEventListener('drop', (ev) => {
+	ev.preventDefault();
+	writeFileInput.files = ev.dataTransfer.files;
+	params.writeMode();
+	refreshUI();
+});
+
+document.documentElement.addEventListener('dragover', (ev) => {
+	ev.preventDefault();
 });
 
 refreshUI();
