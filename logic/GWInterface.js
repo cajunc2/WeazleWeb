@@ -6,7 +6,7 @@ const GreaseWeazleWriter = require("./writer/GreaseWeazleWriter");
 const TRS80Writer = require("./writer/TRS80Writer");
 
 let write = function(params) {
-	let writer = writers[params.type];
+	let writer = writers[params.readerWriterIndex];
 	let config = writer.configure(params);
 	exec(config, params.pipe);
 };

@@ -34,9 +34,12 @@
 		<output id="commandFileOutput">disk.img</output>
 	</div>
 	<div style="display: flex; align-items: center; justify-content: center; gap: 12px">
-		<button id="executeButton">GO!</button>
+		<button id="executeButton">
+			<div><span id="executeButtonLabel">Write</span> Disk Image</div>
+			<div id="executeButtonSubLabel">(click and hold)</div>
+		</button>
 	</div>
-	<div style="margin: 12px auto; display: flex; align-items: center; justify-content: center; gap:12px;">
+	<div id="fileSizeWarning">
 		Warning: Image size does not match selected format
 	</div>
 	<div id="processOutputPanel" style="visibility: hidden;">

@@ -39,11 +39,11 @@ button:active {
 	background: #36365b;
 }
 
-html.warning button {
+html.write-mode button {
 	background: #7f2d18;
 }
 
-html.warning button:active {
+html.write-mode button:active {
 	background: #5e2314;
 }
 
@@ -89,7 +89,7 @@ h3 {
 	margin: 8px auto;
 }
 
-html.warning #commandFileOutput {
+html.write-mode #commandFileOutput {
 	cursor: pointer;
 }
 
@@ -100,6 +100,7 @@ html.warning #commandFileOutput {
 
 #executeButton {
 	position: relative;
+	width: 256px;
 }
 
 #executeButton::after {
@@ -115,12 +116,13 @@ html.warning #commandFileOutput {
 }
 
 #executeButton:hover:active::after {
-	visibility: visible;
+	visibility: hidden;
 	transform: scaleX(1);
-	transition: transform 500ms linear;
+	transition: transform 100ms linear;
 }
 
-html.warning #executeButton:hover:active::after {
+html.write-mode #executeButton:hover:active::after {
+	visibility: visible;
 	transition: transform 1000ms linear;
 }
 
@@ -129,8 +131,18 @@ html.warning #executeButton:hover:active::after {
 	color: #999;
 }
 
-div#driveDescription {
+div#driveDescription, div#executeButtonSubLabel {
 	font-size: 10pt;
 	color: #aaa;
 	margin-top: 4px;
+}
+
+div#fileSizeWarning {
+	margin: 12px auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	color: #ff5555;
+	font-weight: bold;
 }

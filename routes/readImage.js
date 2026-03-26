@@ -1,4 +1,3 @@
-const { spawn } = require('child_process');
 const GWInterface = require('../logic/GWInterface');
 
 module.exports = (req, res) => {
@@ -12,21 +11,4 @@ module.exports = (req, res) => {
 	};
 
 	GWInterface.read(readerWriterParams);
-
-	let params = [
-		'read',
-		// '--diskdefs',
-		// global.appDir + '/diskdefs.cfg',
-		'--format',
-		req.query.format,
-		'--drive',
-		req.query.drive,
-		dir + req.query.requestId + '-' + req.query.filename
-	];
-
-	const child = spawn('~/.local/bin/gw', params, {shell: true});
-	child.stdout.setEncoding('utf8');
-	child.stderr.setEncoding('utf8');
-	child.stdout.pipe(res);
-	child.stderr.pipe(res);
 };

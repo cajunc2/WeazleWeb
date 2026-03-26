@@ -1,16 +1,16 @@
 module.exports = function (gwConfig) {
-	let buildConfiguration = function (imageFilePath, driveLetter) {
+	let buildConfiguration = function (configParams) {
 		let params = [
 			'write',
 			'--format',
 			gwConfig.formatString,
 		];
 
-		if (driveLetter) {
+		if (configParams.driveLetter) {
 			params.push('--drive');
-			params.push(driveLetter);
+			params.push(configParams.driveLetter);
 		}
-		params.push(imageFilePath);
+		params.push(configParams.filename);
 
 		return {
 			exec: '~/.local/bin/gw',
