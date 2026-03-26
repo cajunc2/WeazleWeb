@@ -88,11 +88,11 @@ let refreshUI = function () {
 			ui.commandFileOutput.innerText = "";
 			ui.fileSizeWarning.style.visibility = "hidden";
 		} else {
-			let newValue = ui.writeFileInput.files[0].name;
+			let newValue = ui.writeFileInput.files[0].name.replace(/ /g, '\\ ');
 			ui.commandFileOutput.innerText = newValue;
 			console.log("ui.writeFileInput.files[0].size:", ui.writeFileInput.files[0].size);
 			console.log("params.getFormat().size:", params.getFormat().size);
-			if (ui.writeFileInput.files[0].size !== params.getFormat().size) {
+			if (ui.writeFileInput.files[0].size !== params.getFormat().fileSize) {
 				ui.fileSizeWarning.style.visibility = "visible";
 			} else {
 				ui.fileSizeWarning.style.visibility = "hidden";
