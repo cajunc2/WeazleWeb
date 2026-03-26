@@ -42,7 +42,7 @@ function submitWriteRequest(params, onOutput, onComplete) {
 
 	let writeImageParams = new URLSearchParams({
 		requestId: requestId,
-		drive: params.drive,
+		drive: params.getDrive().name,
 		type: params.format,
 		format: params.getFormat().formatString
 	});
