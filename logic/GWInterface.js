@@ -18,6 +18,7 @@ let read = function(params) {
 };
 
 let exec = function (config, outputStream) {
+	console.log('Executing command:', config.exec, config.params.join(' '));
 	const child = spawn(config.exec, config.params, { shell: true });
 	child.stdout.setEncoding('utf8');
 	child.stderr.setEncoding('utf8');
