@@ -87,11 +87,15 @@ let refreshUI = function () {
 		if (ui.writeFileInput.files[0] == null) {
 			ui.commandFileOutput.innerText = "";
 			ui.fileSizeWarning.style.visibility = "hidden";
+			ui.executeButton.disabled = true;
+			ui.executeButton.style.pointerEvents = "none";
+			ui.executeButtonSubLabel.innerText = "(No file selected)";
 		} else {
+			ui.executeButton.disabled = false;
+			ui.executeButton.style.pointerEvents = "";
+			ui.executeButtonSubLabel.innerText = `(Click and Hold)`;
 			let newValue = ui.writeFileInput.files[0].name.replace(/ /g, '\\ ');
 			ui.commandFileOutput.innerText = newValue;
-			console.log("ui.writeFileInput.files[0].size:", ui.writeFileInput.files[0].size);
-			console.log("params.getFormat().size:", params.getFormat().size);
 			if (ui.writeFileInput.files[0].size !== params.getFormat().fileSize) {
 				ui.fileSizeWarning.style.visibility = "visible";
 			} else {
