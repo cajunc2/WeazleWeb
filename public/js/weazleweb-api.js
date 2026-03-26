@@ -27,8 +27,9 @@ function submitReadRequest(params, onOutput, onComplete) {
 
 	let readImageParams = new URLSearchParams({
 		requestId: requestId,
-		drive: params.getDrive().value,
-		format: params.getFormat().value,
+		drive: params.getDrive().name,
+		type: params.format,
+		format: params.getFormat().formatString,
 		filename: params.getFilename()
 	});
 	fetch('/api/readImage?' + readImageParams.toString(), {
@@ -41,8 +42,9 @@ function submitWriteRequest(params, onOutput, onComplete) {
 
 	let writeImageParams = new URLSearchParams({
 		requestId: requestId,
-		drive: params.getDrive().value,
-		format: params.getFormat().value
+		drive: params.drive,
+		type: params.format,
+		format: params.getFormat().formatString
 	});
 
 	const formData = new FormData();

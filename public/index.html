@@ -4,7 +4,8 @@
 	<title>WeazleWeb</title>
 	<link rel="stylesheet" href="/css/style.css">
 	<script src="js/weazleweb-api.js"></script>
-	<script src="js/weazleweb-ui.js" defer></script>
+	<script src="js/weazleweb-ui.js"></script>
+	<script src="js/weazleweb.js" defer></script>
 </head>
 
 <body>
@@ -12,7 +13,10 @@
 
 	<div style="margin: 16px auto; display: flex; align-items: center; justify-content: center; gap: 12px">
 		<button id="modeSelectButton">Read</button>
-		<button id="driveSelectButton">Drive A</button>
+		<button id="driveSelectButton">
+			<div>Drive <span id="driveLetter">A</span></div>
+			<div id="driveDescription"></div>
+		</button>
 		<button id="formatSelectButton">IBM 360K<br />DS/DD</button>
 	</div>
 	<div style="margin: 32px auto; display: flex; align-items: center; justify-content: center; gap: 12px">
@@ -29,14 +33,19 @@
 		<output id="commandFormatOutput">ibm.360</output>
 		<output id="commandFileOutput">disk.img</output>
 	</div>
-	<div style="margin: 32px auto; display: flex; align-items: center; justify-content: center; gap: 12px">
+	<div style="display: flex; align-items: center; justify-content: center; gap: 12px">
 		<button id="executeButton">GO!</button>
 	</div>
-	<h3>Greaseweazle Output:</h3>
-	<output id="processOutput" style="font-family: monospace; white-space: pre;"></output>
-	<form>
-		<input style="display: none;" type="file" id="writeFileInput" />
-	</form>
+	<div style="margin: 12px auto; display: flex; align-items: center; justify-content: center; gap:12px;">
+		Warning: Image size does not match selected format
+	</div>
+	<div id="processOutputPanel" style="visibility: hidden;">
+		<h3>Greaseweazle Output:</h3>
+		<output id="processOutput" style="font-family: monospace; white-space: pre;"></output>
+		<form>
+			<input style="display: none;" type="file" id="writeFileInput" />
+		</form>
+	</div>
 </body>
 
 </html>

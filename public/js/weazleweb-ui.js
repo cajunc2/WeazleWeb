@@ -3,31 +3,14 @@ const modes = [
 	{ value: 'write', display: 'Write', execute: submitWriteRequest }
 ];
 
-const drives = [
-	{ value: 'A', display: 'Drive A' },
-	{ value: 'B', display: 'Drive B' }
-];
+let formats = [];
 
-const formats = [
-	{ value: 'ibm.360', display: 'IBM 360K<br />DS/DD' },
-	{ value: 'kaypro.ssdd', display: 'Kaypro II 190K<br />SS/DD' },
-	{ value: 'LDOS_SSDD.40T', display: 'TRSDOS 180K<br />SS/DD' }
-];
+// { value: 'ibm.360', display: 'IBM 360K<br />DS/DD', size: 368640 },
+// { value: 'apple2.appledos.140', display: 'AppleDOS 140K<br />SS/DD', size: 143360 },
+// { value: 'kaypro.ssdd', display: 'Kaypro II 190K<br />SS/DD', size: 0 },
+// { value: 'LDOS_SSDD.40T', display: 'TRSDOS 180K<br />SS/DD', size: 0 }
 
-const ui = {
-	modeSelectButton: document.getElementById('modeSelectButton'),
-	commandModeOutput: document.getElementById('commandModeOutput'),
-	readFilenameInput: document.getElementById('readFilenameInput'),
-	fileSelectButton: document.getElementById('fileSelectButton'),
-	commandFileOutput: document.getElementById('commandFileOutput'),
-	writeFileInput: document.getElementById('writeFileInput'),
-	driveSelectButton: document.getElementById('driveSelectButton'),
-	commandDriveOutput: document.getElementById('commandDriveOutput'),
-	formatSelectButton: document.getElementById('formatSelectButton'),
-	commandFormatOutput: document.getElementById('commandFormatOutput'),
-	executeButton: document.getElementById('executeButton'),
-	processOutput: document.getElementById('processOutput')
-};
+let ui = { };
 
 const defaultFilename = 'disk.img';
 
@@ -38,11 +21,14 @@ let params = {
 	},
 	drive: 0,
 	getDrive: function () {
-		return drives[this.drive];
+		return config.drives[this.drive];
 	},
 	format: 0,
 	getFormat: function () {
-		return formats[this.format];
+		if(this.mode === 0) {
+			return config.readers[this.format];
+		}
+		return config.writers[this.format];
 	},
 	filename: '',
 	getFilename: function () {
@@ -54,16 +40,19 @@ let params = {
 	nextMode: function () {
 		this.mode++;
 		if (this.mode >= modes.length) { this.mode = 0; }
+		this.format = 0;
 	},
-	writeMode: function() {
+	writeMode: function () {
 		this.mode = 1;
+		this.format = 0;
 	},
 	nextDrive: function () {
 		this.drive++;
-		if (this.drive >= drives.length) { this.drive = 0; }
+		if (this.drive >= config.drives.length) { this.drive = 0; }
 	},
 	nextFormat: function () {
 		this.format++;
+		formats = (this.mode === 0) ? config.readers : config.writers;
 		if (this.format >= formats.length) { this.format = 0; }
 	}
 };
@@ -92,80 +81,112 @@ let refreshUI = function () {
 		}
 	}
 
-	ui.driveSelectButton.innerHTML = params.getDrive().display;
-	ui.commandDriveOutput.innerText = params.getDrive().value;
+	ui.driveLetter.innerText = params.getDrive().name;
+	ui.driveDescription.innerText = `${params.getDrive().size} ${params.getDrive().sides}/${params.getDrive().density}`;
+	ui.commandDriveOutput.innerText = params.getDrive().name;
 
-	ui.formatSelectButton.innerHTML = params.getFormat().display;
-	ui.commandFormatOutput.innerText = params.getFormat().value;
+	ui.formatSelectButton.innerHTML = params.getFormat().name;
+	ui.commandFormatOutput.innerText = params.getFormat().formatString;
 };
 
 let validateInputs = function () {
 
 }
 
-modeSelectButton.addEventListener('click', () => {
-	params.nextMode();
-	refreshUI();
-});
-
-ui.driveSelectButton.addEventListener('click', () => {
-	params.nextDrive();
-	refreshUI();
-});
-
-ui.formatSelectButton.addEventListener('click', () => {
-	params.nextFormat();
-	refreshUI();
-});
-
-ui.fileSelectButton.addEventListener('click', () => {
-	ui.writeFileInput.click();
-});
-
-ui.readFilenameInput.placeholder = defaultFilename;
-ui.readFilenameInput.addEventListener('input', () => {
-	params.filename = ui.readFilenameInput.value;
-	refreshUI();
-});
-
-ui.writeFileInput.addEventListener('change', () => {
-	refreshUI();
-});
-
 function streamOutput(newData) {
 	ui.processOutput.textContent += newData;
 	ui.processOutput.scrollTop = ui.processOutput.scrollHeight;
 }
 
-let executeTimer = null;
-ui.executeButton.addEventListener('mousedown', () => {
-	executeTimer = setTimeout(() => {
-		ui.executeButton.disabled = true;
-		ui.processOutput.innerHTML = '';
-		validateInputs();
-		params.getMode().execute(params, streamOutput, () => {
-			ui.executeButton.disabled = false;
-		});
-	}, params.getMode().value === 'read' ? 500 : 1000);
-});
+function initUI() {
+	ui = {
+		modeSelectButton: document.getElementById('modeSelectButton'),
+		commandModeOutput: document.getElementById('commandModeOutput'),
+		readFilenameInput: document.getElementById('readFilenameInput'),
+		fileSelectButton: document.getElementById('fileSelectButton'),
+		commandFileOutput: document.getElementById('commandFileOutput'),
+		writeFileInput: document.getElementById('writeFileInput'),
+		driveSelectButton: document.getElementById('driveSelectButton'),
+		driveLetter: document.getElementById('driveLetter'),
+		driveDescription: document.getElementById('driveDescription'),
+		commandDriveOutput: document.getElementById('commandDriveOutput'),
+		formatSelectButton: document.getElementById('formatSelectButton'),
+		commandFormatOutput: document.getElementById('commandFormatOutput'),
+		executeButton: document.getElementById('executeButton'),
+		processOutput: document.getElementById('processOutput'),
+		processOutputPanel: document.getElementById('processOutputPanel')
+	};
 
-ui.executeButton.addEventListener('mouseout', () => {
-	clearTimeout(executeTimer);
-});
+	formats = config.readers;
 
-ui.executeButton.addEventListener('mouseup', () => {
-	clearTimeout(executeTimer);
-});
+	ui.modeSelectButton.addEventListener('click', () => {
+		params.nextMode();
+		refreshUI();
+	});
 
-document.documentElement.addEventListener('drop', (ev) => {
-	ev.preventDefault();
-	writeFileInput.files = ev.dataTransfer.files;
-	params.writeMode();
+	ui.driveSelectButton.addEventListener('click', () => {
+		params.nextDrive();
+		refreshUI();
+	});
+
+	ui.formatSelectButton.addEventListener('click', () => {
+		params.nextFormat();
+		refreshUI();
+	});
+
+	ui.fileSelectButton.addEventListener('click', () => {
+		ui.writeFileInput.click();
+	});
+
+	ui.readFilenameInput.placeholder = defaultFilename;
+	ui.readFilenameInput.addEventListener('input', () => {
+		params.filename = ui.readFilenameInput.value;
+		refreshUI();
+	});
+
+	ui.writeFileInput.addEventListener('change', () => {
+		refreshUI();
+	});
+
+	ui.commandFileOutput.addEventListener('click', (ev) => {
+		ev.preventDefault();
+		if (params.getMode().value === 'write') {
+			ui.writeFileInput.click();
+		}
+	});
+
+
+	let executeTimer = null;
+	ui.executeButton.addEventListener('mousedown', () => {
+		executeTimer = setTimeout(() => {
+			ui.executeButton.disabled = true;
+			ui.processOutput.innerHTML = '';
+			validateInputs();
+			ui.processOutputPanel.style.visibility = 'visible';
+			params.getMode().execute(params, streamOutput, () => {
+				ui.executeButton.disabled = false;
+			});
+		}, params.getMode().value === 'read' ? 500 : 1000);
+	});
+
+	ui.executeButton.addEventListener('mouseout', () => {
+		clearTimeout(executeTimer);
+	});
+
+	ui.executeButton.addEventListener('mouseup', () => {
+		clearTimeout(executeTimer);
+	});
+
+	document.documentElement.addEventListener('drop', (ev) => {
+		ev.preventDefault();
+		ui.writeFileInput.files = ev.dataTransfer.files;
+		params.writeMode();
+		refreshUI();
+	});
+
+	document.documentElement.addEventListener('dragover', (ev) => {
+		ev.preventDefault();
+	});
+
 	refreshUI();
-});
-
-document.documentElement.addEventListener('dragover', (ev) => {
-	ev.preventDefault();
-});
-
-refreshUI();
+}

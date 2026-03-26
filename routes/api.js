@@ -1,7 +1,8 @@
-var readImage = require('./readImage');
-var downloadImage = require('./downloadImage');
-var writeImage = require('./writeImage');
+const readImage = require('./readImage');
+const downloadImage = require('./downloadImage');
+const writeImage = require('./writeImage');
 const multer = require('multer');
+const getConfig = require('./getConfig');
 
 const uploadDir = global.appDir + '/disks/write/';
 const storage = multer.diskStorage({
@@ -22,6 +23,7 @@ module.exports = (express) => {
 	router.post('/readImage', readImage);
 	router.get('/downloadImage', downloadImage);
 	router.post('/writeImage', upload.single('diskimage'), writeImage);
+	router.get('/getConfig', getConfig);
 
 	return router;
 }
