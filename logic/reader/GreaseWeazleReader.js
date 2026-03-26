@@ -10,7 +10,7 @@ module.exports = function (gwConfig) {
 			params.push('--drive');
 			params.push(configParams.driveLetter);
 		}
-		params.push(configParams.filename.replace(/ /g, '\\ '));
+		params.push('"' + configParams.filename.replace(/"/g, '\\"') + '"');
 
 		return {
 			exec: '~/.local/bin/gw',
